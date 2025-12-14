@@ -1,3 +1,15 @@
+CREATE SCHEMA IF NOT EXISTS user_svc;
+
+CREATE TABLE user_svc.users (
+    user_id BIGSERIAL PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(150) UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(30) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
 CREATE SCHEMA IF NOT EXISTS customer_svc;
 
 CREATE TABLE customer_svc.customer (

@@ -1,4 +1,17 @@
 services:
+# infra containers
+  postgres:
+    container_name: postgres
+    image: postgres:16.9
+    ports:
+      - "5432:5432"
+    env_file:
+      - database/.env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./database/dataset.csv:/docker-entrypoint-initdb.d/dataset.csv:ro
+
   zookeeper:
     container_name: zookeeper
     image: confluentinc/cp-zookeeper:7.7.0
@@ -6,7 +19,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - 22181:2181
+      - "22181:2181"
   
   kafka:
     container_name: kafka
@@ -14,7 +27,7 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - 29092:29092
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -36,3 +49,5 @@ services:
       - zookeeper
       - kafka
 
+volumes:
+  postgres-data:
